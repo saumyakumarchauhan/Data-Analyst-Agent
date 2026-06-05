@@ -1,297 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TDS Data Analyst Agent</title>
-  <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6; color:#f5f5f5;
-    background: linear-gradient(135deg,#1e1e2f 0%,#2a2a3d 100%);
-    min-height:100vh;
-  }
-  .container { max-width:1200px; margin:0 auto; padding:20px; }
-  .header { text-align:center; margin-bottom:30px; color:#fff; }
-  .header h1 { font-size:2.5rem; margin-bottom:10px; text-shadow:2px 2px 4px rgba(0,0,0,.6); }
-  .header p { font-size:1.1rem; opacity:.85; }
-  .main-card {
-    background:#2c2c3e; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,.4);
-    padding:30px; margin-bottom:30px;
-  }
-  .form-group label { display:block; margin-bottom:8px; font-weight:600; color:#ddd; }
-  .file-input {
-    width:100%; padding:15px; border:2px dashed #555; border-radius:8px;
-    background:#1f1f2e; cursor:pointer; transition:.3s ease; text-align:center; position:relative;
-    color:#bbb;
-  }
-  .file-input:hover { border-color:#667eea; background:#2a2a40; color:#fff; }
-  .file-info { margin-top:10px; padding:10px; background:#333; border-radius:5px; font-size:14px; color:#a8c7ff; display:none; }
-  .btn {
-    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; border:none;
-    padding:15px 30px; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; transition:.3s ease; width:100%;
-  }
-  .btn:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(102,126,234,.6); }
-  .btn:disabled { background:#555; cursor:not-allowed; transform:none; box-shadow:none; }
-  .btn-secondary { background:#444; color:#ddd; }
-  .button-group { display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; }
-  .loading { display:none; text-align:center; padding:20px; }
-  .spinner {
-    border:4px solid #444; border-top:4px solid #667eea; border-radius:50%;
-    width:40px; height:40px; animation:spin 1s linear infinite; margin:0 auto 15px;
-  }
-  @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
-  .results { display:none; margin-top:30px; }
-  .result-item { background:#1f1f2e; border-left:4px solid #667eea; padding:20px; margin-bottom:20px; border-radius:0 8px 8px 0; }
-  .question { font-weight:600; color:#fff; margin-bottom:15px; font-size:1.1rem; }
-  .answer { color:#ccc; line-height:1.6; }
-  .answer pre {
-    background:#2c2c3e; color:#eee;
-  }
-  .answer img {
-    max-width:100%; height:auto; border-radius:8px; margin:10px 0;
-    box-shadow:0 4px 8px rgba(0,0,0,.5); cursor:pointer; transition:transform .3s ease;
-  }
-  .answer img:hover { transform:scale(1.02); }
-  .error { background:#3b1f1f; border-left-color:#dc3545; color:#ffb3b3; }
-  .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,.9); }
-  .modal-content { margin:auto; display:block; width:80%; max-width:700px; max-height:80%; object-fit:contain; }
-  .close { position:absolute; top:15px; right:35px; color:#f1f1f1; font-size:40px; font-weight:bold; cursor:pointer; }
-  .close:hover { color:#bbb; }
-  @media (max-width:768px){
-    .container{padding:10px}
-    .header h1{font-size:2rem}
-    .main-card{padding:20px}
-    .button-group{flex-direction:column}
-    .btn-secondary{width:100%}
-  }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TDS Data Analyst Agent</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --accent:#6C63FF;
+  --accent2:#A78BFA;
+  --surface:#0F0F1A;
+  --card:#16162A;
+  --card2:#1E1E38;
+  --border:rgba(108,99,255,0.18);
+  --border2:rgba(108,99,255,0.38);
+  --text:#F0EEFF;
+  --muted:#9B93C6;
+  --glow:0 0 32px rgba(108,99,255,0.22);
+  --glow2:0 0 60px rgba(108,99,255,0.15);
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--surface);color:var(--text);min-height:100vh;padding:0}
+.bg-mesh{
+  position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(108,99,255,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 90%, rgba(167,139,250,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 60% 30%, rgba(124,58,237,0.07) 0%, transparent 70%);
+}
+.wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:48px 24px 80px}
+.hero{text-align:center;margin-bottom:52px}
+.logo-ring{
+  width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#6C63FF,#A78BFA);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 20px;
+  box-shadow:0 0 0 12px rgba(108,99,255,0.08),0 0 0 24px rgba(108,99,255,0.04);
+}
+.logo-ring i{font-size:30px;color:#fff}
+h1{font-size:2.1rem;font-weight:700;letter-spacing:-0.5px;
+  background:linear-gradient(90deg,#fff 0%,var(--accent2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:10px}
+.subtitle{color:var(--muted);font-size:1rem;line-height:1.6}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:36px;box-shadow:var(--glow2);margin-bottom:24px;
+  transition:border-color .3s;
+}
+.card:hover{border-color:var(--border2)}
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent2);margin-bottom:20px;display:flex;align-items:center;gap:8px
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.upload-zone{
+  border:1.5px dashed var(--border2);border-radius:14px;padding:28px 20px;
+  background:var(--card2);cursor:pointer;transition:all .25s;
+  text-align:center;position:relative;overflow:hidden;
+}
+.upload-zone::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;
+  background:radial-gradient(ellipse at center,rgba(108,99,255,0.10) 0%,transparent 70%);
+}
+.upload-zone:hover::before,.upload-zone.active::before{opacity:1}
+.upload-zone:hover,.upload-zone.active{
+  border-color:var(--accent);background:#1a1a35;
+  box-shadow:0 0 0 4px rgba(108,99,255,0.10),var(--glow);
+}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uz-icon{
+  width:44px;height:44px;border-radius:12px;background:rgba(108,99,255,0.14);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 12px;
+  transition:transform .2s;
+}
+.upload-zone:hover .uz-icon{transform:translateY(-2px)}
+.uz-icon i{font-size:22px;color:var(--accent2)}
+.uz-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.uz-sub{font-size:12.5px;color:var(--muted)}
+.file-pill{
+  display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.25);
+  border-radius:100px;padding:6px 14px;font-size:12.5px;color:var(--accent2);display:none;
+}
+.file-pill i{font-size:15px}
+.optional-badge{
+  display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:2px 8px;border-radius:100px;
+  background:rgba(255,255,255,0.06);color:var(--muted);margin-left:8px;vertical-align:middle;
+}
+.divider{margin:28px 0;border:none;border-top:1px solid var(--border)}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  flex:1;min-width:140px;padding:15px 28px;border-radius:12px;font-size:15px;
+  font-weight:700;cursor:pointer;border:none;transition:all .22s;
+  display:flex;align-items:center;justify-content:center;gap:9px;letter-spacing:0.2px;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#6C63FF 0%,#9B8BFF 100%);color:#fff;
+  box-shadow:0 4px 24px rgba(108,99,255,0.40);
+}
+.btn-primary:hover:not(:disabled){
+  transform:translateY(-2px);box-shadow:0 8px 32px rgba(108,99,255,0.55);filter:brightness(1.08);
+}
+.btn-primary:active:not(:disabled){transform:translateY(0);filter:brightness(0.95)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed}
+.btn-ghost{
+  background:transparent;color:var(--muted);
+  border:1.5px solid var(--border2);flex:0 0 auto;
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.04);color:var(--text);border-color:rgba(255,255,255,0.2)}
+.spinner-wrap{display:flex;flex-direction:column;align-items:center;padding:40px;gap:16px;display:none}
+.spinner{
+  width:44px;height:44px;border-radius:50%;
+  border:3px solid rgba(108,99,255,0.15);
+  border-top:3px solid var(--accent2);
+  animation:spin 0.9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-text{color:var(--muted);font-size:14px;letter-spacing:0.5px}
+.results{display:none;margin-top:8px}
+.results-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:20px;
+  font-size:18px;font-weight:700;color:var(--text);
+}
+.results-header i{font-size:22px;color:var(--accent2)}
+.result-item{
+  background:var(--card2);border:1px solid var(--border);border-radius:16px;
+  padding:24px 26px;margin-bottom:16px;transition:border-color .2s;
+  animation:fadeUp 0.35s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.result-item:hover{border-color:var(--border2)}
+.result-item.error{border-color:rgba(239,68,68,0.35);background:rgba(239,68,68,0.04)}
+.q-num{
+  display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--accent2);margin-bottom:8px;
+}
+.q-text{font-size:15px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.5}
+.a-body{color:#C0BAE8;font-size:14.5px;line-height:1.7}
+.a-body pre{
+  background:#0a0a18;border:1px solid var(--border);border-radius:10px;
+  padding:16px;overflow-x:auto;font-size:13px;color:#d4cfff;white-space:pre-wrap;margin-top:8px;
+}
+.a-body img{
+  max-width:100%;border-radius:12px;margin-top:12px;cursor:zoom-in;
+  transition:transform .25s,box-shadow .25s;border:1px solid var(--border2);display:block;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+.a-body img:hover{transform:scale(1.015);box-shadow:0 8px 36px rgba(108,99,255,0.25)}
+.overlay{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(5,5,15,0.92);
+  align-items:center;justify-content:center;cursor:zoom-out;
+}
+.overlay.open{display:flex}
+.overlay img{max-width:90vw;max-height:90vh;border-radius:14px;object-fit:contain;box-shadow:0 20px 80px rgba(0,0,0,0.8)}
+.close-btn{
+  position:absolute;top:20px;right:24px;background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.12);border-radius:50%;width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;transition:all .2s;
+}
+.close-btn:hover{background:rgba(255,255,255,0.15)}
+@media(max-width:600px){
+  .wrap{padding:32px 16px 60px}
+  h1{font-size:1.6rem}
+  .card{padding:22px}
+  .btn{padding:13px 18px;font-size:14px}
+}
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>🤖 TDS Data Analyst Agent</h1>
-      <p>Upload your questions file and optional dataset to get intelligent answers with visualizations</p>
+<div class="bg-mesh"></div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="logo-ring"><i class="ti ti-brain" aria-hidden="true"></i></div>
+    <h1>TDS Data Analyst Agent</h1>
+    <p class="subtitle">Upload questions and datasets — get intelligent answers with visualizations, instantly.</p>
+  </div>
+
+  <div class="card">
+    <div class="section-label"><i class="ti ti-file-text" aria-hidden="true"></i> Questions</div>
+    <div class="upload-zone" id="qZone">
+      <input type="file" id="qFile" accept=".txt"/>
+      <div class="uz-icon"><i class="ti ti-upload" aria-hidden="true"></i></div>
+      <div class="uz-title">Drop your questions file here</div>
+      <div class="uz-sub">.txt format · Required</div>
     </div>
+    <div class="file-pill" id="qPill"><i class="ti ti-file-check" aria-hidden="true"></i><span id="qPillText"></span></div>
 
-    <div class="main-card">
-      <form id="analysisForm">
-        <!-- Questions file (REQUIRED) -->
-        <div class="form-group">
-          <label for="questions_file">Questions File (.txt) <span style="color:#dc3545">*</span></label>
-          <div class="file-input-wrapper">
-            <div class="file-input" id="questionsDrop">
-              <input type="file" id="questions_file" name="questions_file" accept=".txt"/>
-              <span>📁 Click to upload your questions (.txt)</span>
-            </div>
-          </div>
-          <div id="questionsInfo" class="file-info"></div>
-        </div>
+    <hr class="divider"/>
 
-        <!-- Dataset file (OPTIONAL) -->
-        <div class="form-group">
-          <label for="data_file">Upload Dataset (Optional)</label>
-          <div class="file-input-wrapper">
-            <div class="file-input" id="dataDrop">
-              <input type="file" id="data_file" name="data_file" accept=".csv,.xlsx,.xls,.json,.parquet,.txt"/>
-              <span>📁 Click or drag & drop your dataset</span>
-            </div>
-          </div>
-          <div id="dataInfo" class="file-info"></div>
-        </div>
+    <div class="section-label">
+      <i class="ti ti-database" aria-hidden="true"></i> Dataset
+      <span class="optional-badge">Optional</span>
+    </div>
+    <div class="upload-zone" id="dZone">
+      <input type="file" id="dFile" accept=".csv,.xlsx,.xls,.json,.parquet,.txt"/>
+      <div class="uz-icon"><i class="ti ti-table" aria-hidden="true"></i></div>
+      <div class="uz-title">Drop your dataset here</div>
+      <div class="uz-sub">CSV, Excel, JSON, Parquet, TXT</div>
+    </div>
+    <div class="file-pill" id="dPill"><i class="ti ti-file-check" aria-hidden="true"></i><span id="dPillText"></span></div>
 
-        <div class="button-group">
-          <button type="submit" class="btn" id="submitBtn">🚀 Analyze Data</button>
-          <button type="button" class="btn btn-secondary" id="clearBtn">🗑️ Clear</button>
-        </div>
-      </form>
+    <hr class="divider"/>
 
-      <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Analyzing your data... This may take a few moments.</p>
-      </div>
-
-      <div class="results" id="results">
-        <h3>📊 Analysis Results</h3>
-        <div id="resultsContent"></div>
-      </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="analyzeBtn" onclick="handleAnalyze()">
+        <i class="ti ti-sparkles" aria-hidden="true"></i>
+        Analyze Data
+      </button>
+      <button class="btn btn-ghost" onclick="handleClear()">
+        <i class="ti ti-refresh" aria-hidden="true"></i> Clear
+      </button>
     </div>
   </div>
 
-  <!-- Image Modal -->
-  <div id="imageModal" class="modal">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="modalImage" alt="Visualization"/>
+  <div class="spinner-wrap" id="spinnerWrap">
+    <div class="spinner"></div>
+    <p class="spin-text">Analyzing your data…</p>
   </div>
 
-  <script>
-    /* ---------- Image normalization helpers ---------- */
-    function normalizeImageData(answer) {
-      let s = null;
-      if (typeof answer === 'string') { s = answer.trim(); }
-      else if (answer && typeof answer === 'object') {
-        s = answer.image || answer.base64 || answer.plot || answer.data || null;
-        if (typeof s === 'string') s = s.trim();
-      }
-      if (!s) return null;
+  <div class="results" id="results">
+    <div class="results-header"><i class="ti ti-chart-dots" aria-hidden="true"></i> Analysis Results</div>
+    <div id="resultsContent"></div>
+  </div>
+</div>
 
-      s = s.replace(/^data:aimage\//i, 'data:image/');
+<div class="overlay" id="overlay" onclick="closeOverlay(this)">
+  <div class="close-btn" onclick="event.stopPropagation();closeOverlay(document.getElementById('overlay'))">
+    <i class="ti ti-x" aria-hidden="true"></i>
+  </div>
+  <img id="overlayImg" src="" alt="Visualization preview"/>
+</div>
 
-      if (/^data:image\//i.test(s)) return s;
+<script>
+const qFile=document.getElementById('qFile');
+const dFile=document.getElementById('dFile');
+const qZone=document.getElementById('qZone');
+const dZone=document.getElementById('dZone');
+const qPill=document.getElementById('qPill');
+const dPill=document.getElementById('dPill');
+const qPillText=document.getElementById('qPillText');
+const dPillText=document.getElementById('dPillText');
+const analyzeBtn=document.getElementById('analyzeBtn');
+const spinnerWrap=document.getElementById('spinnerWrap');
+const resultsEl=document.getElementById('results');
+const resultsContent=document.getElementById('resultsContent');
 
-      const base64Like = /^[A-Za-z0-9+/=\r\n]+$/.test(s) && s.length > 200 && !/\s{2,}/.test(s);
-      if (base64Like) return 'data:image/png;base64,' + s;
+function setFilePill(pill,text,file){
+  text.textContent=file.name+' ('+Math.round(file.size/1024)+' KB)';
+  pill.style.display='inline-flex';
+}
 
-      return null;
-    }
+qFile.addEventListener('change',()=>{if(qFile.files[0]){qZone.classList.add('active');setFilePill(qPill,qPillText,qFile.files[0])}});
+dFile.addEventListener('change',()=>{if(dFile.files[0]){dZone.classList.add('active');setFilePill(dPill,dPillText,dFile.files[0])}});
 
-    function renderAnswerInto(answer, container, onImageClick) {
-      const maybeImg = normalizeImageData(answer);
-      if (maybeImg) {
-        const img = document.createElement('img');
-        img.src = maybeImg;
-        img.alt = 'Generated visualization';
-        img.addEventListener('click', () => onImageClick(maybeImg));
-        container.appendChild(img);
-        return;
-      }
-      const text = (answer && typeof answer === 'object') ? JSON.stringify(answer, null, 2) : String(answer ?? '');
-      if (text.includes('\n') || text.length > 120) {
-        const pre = document.createElement('pre');
-        pre.style.whiteSpace = 'pre-wrap';
-        pre.style.background = '#f8f9fa';
-        pre.style.padding = '15px';
-        pre.style.borderRadius = '5px';
-        pre.style.overflow = 'auto';
-        pre.textContent = text;
-        container.appendChild(pre);
-      } else {
-        container.textContent = text;
-      }
-    }
+function normalizeImage(answer){
+  let s=typeof answer==='string'?answer.trim():(answer&&(answer.image||answer.base64||answer.plot||answer.data))||null;
+  if(typeof s==='string')s=s.trim();if(!s)return null;
+  s=s.replace(/^data:aimage\//i,'data:image/');
+  if(/^data:image\//i.test(s))return s;
+  if(/^[A-Za-z0-9+/=\r\n]+$/.test(s)&&s.length>200)return'data:image/png;base64,'+s;
+  return null;
+}
 
-    /* ---------------- App ---------------- */
-    class DataAnalystApp {
-      constructor() {
-        this.form = document.getElementById('analysisForm');
-        this.qFileInput = document.getElementById('questions_file');
-        this.dFileInput = document.getElementById('data_file');
-        this.qDrop = document.getElementById('questionsDrop');
-        this.dDrop = document.getElementById('dataDrop');
-        this.qInfo = document.getElementById('questionsInfo');
-        this.dInfo = document.getElementById('dataInfo');
-        this.submitBtn = document.getElementById('submitBtn');
-        this.clearBtn = document.getElementById('clearBtn');
-        this.loading = document.getElementById('loading');
-        this.results = document.getElementById('results');
-        this.resultsContent = document.getElementById('resultsContent');
-        this.modal = document.getElementById('imageModal');
-        this.modalImage = document.getElementById('modalImage');
-        this.closeModal = document.querySelector('.close');
-        this.initEventListeners();
-      }
+function renderAnswer(answer,container){
+  const img=normalizeImage(answer);
+  if(img){
+    const el=document.createElement('img');
+    el.src=img;el.alt='Visualization';
+    el.onclick=()=>{document.getElementById('overlayImg').src=img;document.getElementById('overlay').classList.add('open');document.body.style.overflow='hidden'};
+    container.appendChild(el);return;
+  }
+  const text=(answer&&typeof answer==='object')?JSON.stringify(answer,null,2):String(answer??'');
+  if(text.includes('\n')||text.length>100){
+    const pre=document.createElement('pre');pre.textContent=text;container.appendChild(pre);
+  } else {container.textContent=text;}
+}
 
-      initEventListeners() {
-        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-        this.clearBtn.addEventListener('click', () => this.clearForm());
-        this.qFileInput.addEventListener('change', (e) => this.handleFileSelect(e, 'q'));
-        this.dFileInput.addEventListener('change', (e) => this.handleFileSelect(e, 'd'));
-        this.closeModal.addEventListener('click', () => this.hideImageModal());
-        this.modal.addEventListener('click', (e) => { if (e.target === this.modal) this.hideImageModal(); });
-        this.setupDrop(this.dDrop, (files) => { if (files && files.length > 0) { this.dFileInput.files = files; this.handleFileSelect({ target: { files } }, 'd'); } });
-        this.setupDrop(this.qDrop, (files) => { if (files && files.length > 0) { this.qFileInput.files = files; this.handleFileSelect({ target: { files } }, 'q'); } });
-      }
+async function handleAnalyze(){
+  if(!qFile.files[0]){alert('Please upload your questions .txt file.');return;}
+  analyzeBtn.disabled=true;analyzeBtn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Analyzing…';
+  spinnerWrap.style.display='flex';resultsEl.style.display='none';
 
-      setupDrop(zone, onDropFiles) {
-        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.style.borderColor = '#667eea'; });
-        zone.addEventListener('dragleave', (e) => { e.preventDefault(); zone.style.borderColor = '#e1e5e9'; });
-        zone.addEventListener('drop', (e) => { e.preventDefault(); zone.style.borderColor = '#e1e5e9'; onDropFiles(e.dataTransfer.files); });
-      }
+  try{
+    const fd=new FormData();
+    fd.append('questions_file',qFile.files[0]);
+    if(dFile.files[0])fd.append('data_file',dFile.files[0]);
+    const res=await fetch('/api',{method:'POST',body:fd});
+    if(!res.ok){let m=`HTTP ${res.status}`;try{const e=await res.json();if(e.detail)m=e.detail;}catch{}throw new Error(m);}
+    const data=await res.json();
+    displayResults(data);
+  } catch(err){displayError(err.message||'Unknown error');}
+  finally{
+    spinnerWrap.style.display='none';
+    analyzeBtn.disabled=false;
+    analyzeBtn.innerHTML='<i class="ti ti-sparkles"></i> Analyze Data';
+  }
+}
 
-      handleFileSelect(event, type) {
-        const file = event.target.files[0];
-        if (type === 'q') {
-          if (file) { this.qInfo.innerHTML = `<strong>Questions:</strong> ${file.name} (${(file.size / 1024).toFixed(2)} KB)`; this.qInfo.style.display = 'block'; }
-          else { this.qInfo.style.display = 'none'; }
-        } else {
-          if (file) { this.dInfo.innerHTML = `<strong>Dataset:</strong> ${file.name} (${(file.size / 1024).toFixed(2)} KB)`; this.dInfo.style.display = 'block'; }
-          else { this.dInfo.style.display = 'none'; }
-        }
-      }
+function displayResults(data){
+  resultsContent.innerHTML='';
+  if(data.error){displayError(data.error);return;}
+  let i=0;
+  Object.entries(data).forEach(([q,a])=>{
+    i++;
+    const item=document.createElement('div');item.className='result-item';
+    item.innerHTML=`<div class="q-num">Question ${i}</div><div class="q-text">${escHtml(q)}</div>`;
+    const aDiv=document.createElement('div');aDiv.className='a-body';
+    renderAnswer(a,aDiv);item.appendChild(aDiv);
+    resultsContent.appendChild(item);
+  });
+  resultsEl.style.display='block';
+  setTimeout(()=>resultsEl.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
 
-      async handleSubmit(event) {
-        event.preventDefault();
-        if (!this.qFileInput.files[0]) { alert('Please upload your questions .txt file.'); return; }
-        this.showLoading(); this.hideResults();
+function displayError(msg){
+  resultsContent.innerHTML='';
+  const item=document.createElement('div');item.className='result-item error';
+  item.innerHTML=`<div class="q-text" style="color:#f87171"><i class="ti ti-alert-circle" aria-hidden="true" style="margin-right:6px"></i>Error</div><div class="a-body">${escHtml(msg)}</div>`;
+  resultsContent.appendChild(item);
+  resultsEl.style.display='block';
+  setTimeout(()=>resultsEl.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
 
-        try {
-          const formData = new FormData();
-          formData.append('questions_file', this.qFileInput.files[0]);
-          if (this.dFileInput.files[0]) formData.append('data_file', this.dFileInput.files[0]);
+function handleClear(){
+  qFile.value='';dFile.value='';
+  qPill.style.display='none';dPill.style.display='none';
+  qZone.classList.remove('active');dZone.classList.remove('active');
+  resultsEl.style.display='none';resultsContent.innerHTML='';
+}
 
-          const response = await fetch('/api', { method:'POST', body:formData }); // changed endpoint
-
-          if (!response.ok) {
-            let msg = `HTTP ${response.status}`;
-            try { const err = await response.json(); if (err && err.detail) msg = err.detail; } catch {}
-            throw new Error(msg);
-          }
-
-          const data = await response.json();
-          this.displayResults(data);
-        } catch (err) {
-          console.error('Analysis failed:', err);
-          this.displayError(err.message || 'Unknown error');
-        } finally {
-          this.hideLoading();
-        }
-      }
-
-      displayResults(data) {
-        this.resultsContent.innerHTML = '';
-        if (data.error) { this.displayError(data.error); return; }
-        Object.entries(data).forEach(([question, answer]) => {
-          const item = document.createElement('div');
-          item.className = 'result-item';
-          const qDiv = document.createElement('div');
-          qDiv.className = 'question';
-          qDiv.textContent = question;
-          const aDiv = document.createElement('div');
-          aDiv.className = 'answer';
-          renderAnswerInto(answer, aDiv, (src) => this.showImageModal(src));
-          item.appendChild(qDiv); item.appendChild(aDiv);
-          this.resultsContent.appendChild(item);
-        });
-        this.showResults(); this.scrollToResults();
-      }
-
-      displayError(message) {
-        this.resultsContent.innerHTML = '';
-        const item = document.createElement('div');
-        item.className = 'result-item error';
-        const title = document.createElement('div');
-        title.className = 'question';
-        title.textContent = '❌ Error';
-        const content = document.createElement('div');
-        content.className = 'answer';
-        content.textContent = message;
-        item.appendChild(title); item.appendChild(content);
-        this.resultsContent.appendChild(item);
-        this.showResults(); this.scrollToResults();
-      }
-
-      showImageModal(src) { this.modalImage.src = src; this.modal.style.display = 'block'; document.body.style.overflow = 'hidden'; }
-      hideImageModal() { this.modal.style.display = 'none'; document.body.style.overflow = 'auto'; }
-      showLoading() { this.loading.style.display = 'block'; this.submitBtn.disabled = true; this.submitBtn.textContent = '⏳ Analyzing...'; }
-      hideLoading() { this.loading.style.display = 'none'; this.submitBtn.disabled = false; this.submitBtn.textContent = '🚀 Analyze Data'; }
-      showResults() { this.results.style.display = 'block'; }
-      hideResults() { this.results.style.display = 'none'; }
-      scrollToResults() { setTimeout(() => this.results.scrollIntoView({ behavior:'smooth', block:'start' }), 100); }
-      clearForm() { this.qFileInput.value = ''; this.dFileInput.value = ''; this.qInfo.style.display = 'none'; this.dInfo.style.display = 'none'; this.hideResults(); this.hideLoading(); }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => { new DataAnalystApp(); });
-  </script>
+function closeOverlay(el){el.classList.remove('open');document.body.style.overflow='auto';}
+function escHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+</script>
 </body>
 </html>
