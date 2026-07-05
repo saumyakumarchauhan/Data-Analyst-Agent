@@ -350,6 +350,16 @@ curl "http://localhost:8000/summary?full=true"
 ```
 Returns environment status, system resources, network reachability to Google AI / OpenAI / GitHub, and a per-key/per-model LLM health report — invaluable when debugging quota exhaustion.
 
+
+### 🔗 More Example Datasets & Questions
+
+For additional datasets and practice questions, you can refer to the following resources:
+
+- [Sales Dataset (Tools in Data Science)](https://github.com/sanand0/tools-in-data-science-public/tree/main/project-data-analyst/sales/)
+- [Network Dataset (Tools in Data Science)](https://github.com/sanand0/tools-in-data-science-public/tree/main/project-data-analyst/network/)
+- [Weather Dataset (Tools in Data Science)](https://github.com/sanand0/tools-in-data-science-public/tree/main/project-data-analyst/weather/) 
+
+
 ---
 
 ## 🛡 Reliability Engineering
