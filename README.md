@@ -12,8 +12,8 @@
 [![Gemini](https://img.shields.io/badge/Gemini-2.5%20Pro%2FFlash-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-[![Stars](https://img.shields.io/github/stars/your-username/data-analyst-agent?style=social)](https://github.com/your-username/data-analyst-agent)
-[![Forks](https://img.shields.io/github/forks/your-username/data-analyst-agent?style=social)](https://github.com/your-username/data-analyst-agent)
+[![Stars](https://img.shields.io/github/stars/saumyakumarchauhan/data-analyst-agent?style=social)](https://github.com/saumyakumarchauhan/data-analyst-agent)
+[![Forks](https://img.shields.io/github/forks/saumyakumarchauhan/data-analyst-agent?style=social)](https://github.com/saumyakumarchauhan/data-analyst-agent)
 
 </div>
 
